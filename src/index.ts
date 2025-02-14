@@ -1,14 +1,32 @@
-import express, { Request, Response } from "express";
+import express, { Application } from 'express';
+import dotenv from 'dotenv';
+import apiRoutes from './routes/apiRoutes';
+import { connectToDatabase } from './config/dbConfig';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+dotenv.config();
 
-app.use(express.json());
+const app: Application = express();
+app.use(cors());
+const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("AINDAI API");
+connectToDatabase().then(() => {
+  console.log('Database connected successfully');
+}).catch((error) => {
+  console.error('Database connection failed:', error);
 });
 
+app.use(cookieParser());
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use('/api', apiRoutes);
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Visit http://localhost:${PORT} to access the application`);
 });

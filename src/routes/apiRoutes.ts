@@ -8,6 +8,8 @@ import exerciseController from '../controllers/exerciseController';
 import openaiController from '../controllers/openaiController';
 import activityController from '../controllers/activityController';
 
+
+
 // User Routes
 router.get('/users', userController.getAllUsers);
 router.get('/users/:userId', userController.getUserById);
@@ -48,5 +50,10 @@ router.delete('/activities/:id', activityController.deleteActivity);
 router.post('/openai', openaiController.createOpenAIChat);
 router.put('/openai/:chatId', openaiController.updateOpenAIChat);
 router.post('/openai/help', openaiController.getHelp);
+
+// Root Route
+router.get('/', (req, res) => {
+    res.send('Welcome to AINDAI API!');
+});
 
 export default router; 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const connectToDatabase = (): mongoose.Connection => {
+const connectToDatabase = async (): Promise<void> => {
   // Connect to MongoDB
   const username = process.env.USERNAME as string;
   const password = process.env.PASSWORD as string;
@@ -8,11 +8,12 @@ const connectToDatabase = (): mongoose.Connection => {
 
   const uri: string = `mongodb+srv://${username}:${password}@cluster0.tcz8xzq.mongodb.net/${db_name}?retryWrites=true&w=majority`;
 
-  mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-  const db: mongoose.Connection = mongoose.connection;
-
-  return db;
+  try {
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
 };
 
 export { connectToDatabase }; 
