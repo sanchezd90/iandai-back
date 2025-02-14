@@ -32,7 +32,7 @@ export const googleCallback = async (req: Request, res: Response) => {
 
   const token = jwt.sign(
     { id: (req.user as any).id, name: (req.user as any).displayName, user: existingUser ?? newUser },
-    process.env.JWT_SECRET as string,
+    process.env.JWT_SECRET_KEY as string,
     { expiresIn: '1h' }
   );
 

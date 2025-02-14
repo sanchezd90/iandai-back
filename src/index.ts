@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 // Session setup (required for Passport)
 app.use(session({
-  secret: process.env.JWT_SECRET as string,
+  secret: process.env.JWT_SECRET_KEY as string,
   resave: false,
   saveUninitialized: true,
 }));
