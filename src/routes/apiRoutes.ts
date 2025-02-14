@@ -8,6 +8,9 @@ import exerciseController from '../controllers/exerciseController';
 import openaiController from '../controllers/openaiController';
 import activityController from '../controllers/activityController';
 import toneController from '../controllers/toneController';
+import passport from 'passport';
+import { googleCallback, logout } from '../controllers/authController';
+import { Request, Response } from 'express';
 
 // User Routes
 router.get('/users/me', userController.getMe);
@@ -16,6 +19,7 @@ router.delete('/users/me', userController.deleteMe);
 router.post('/users/signup', userController.createUser);
 router.post('/users/auth', userController.login);
 router.post('/users/logout', userController.logout);
+
 // Language Routes
 router.get('/languages', languageController.getAllLanguages);
 router.get('/languages/:languageId', languageController.getLanguageById);
@@ -52,8 +56,13 @@ router.post('/openai/help', openaiController.getHelp);
 // Tone Routes
 router.get('/tones', toneController.getAll);
 
+// Google Login Route
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), googleCallback);
+router.get('/auth/logout', logout)
+
 // Root Route
-router.get('/', (req, res) => {
+router.get('/', (_req: Request, res: Response): void => {
     res.send('Welcome to AINDAI API!');
 });
 
