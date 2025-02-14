@@ -98,6 +98,10 @@ const userController: UserController = {
         res.status(401).json({ message: 'Invalid credentials' });
         return;
       }
+      if (existingUser.googleId) {
+        res.status(401).json({ message: 'Authenticate using OAuth' });
+        return;
+      }
 
       const isPasswordValid = await bcrypt.compare(password, existingUser.password);
       if (!isPasswordValid) {

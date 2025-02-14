@@ -53,6 +53,7 @@ export interface ITone extends Document {
 export interface IUser extends Document {
   email: string;
   password: string;
+  googleId: string;
   siteLanguage: Types.ObjectId | ILanguage;
   conversationLanguage: Types.ObjectId | ILanguage;
   tone: Types.ObjectId | ITone;
