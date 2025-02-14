@@ -11,8 +11,8 @@ import toneController from '../controllers/toneController';
 
 // User Routes
 router.get('/users/me', userController.getMe);
-router.put('/users/me', userController.updateUser);
-router.delete('/users/me', userController.deleteUser);
+router.put('/users/me', userController.updateMe);
+router.delete('/users/me', userController.deleteMe);
 router.post('/users/signup', userController.createUser);
 router.post('/users/auth', userController.login);
 router.post('/users/logout', userController.logout);

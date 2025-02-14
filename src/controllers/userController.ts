@@ -11,8 +11,8 @@ dotenv.config();
 let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 interface UserController {    
-  updateUser: (req: Request, res: Response) => void;
-  deleteUser: (req: Request, res: Response) => void;
+  updateMe: (req: Request, res: Response) => void;
+  deleteMe: (req: Request, res: Response) => void;
   createUser: (req: Request, res: Response) => void;
   login: (req: Request, res: Response) => void;
   logout: (req: Request, res: Response) => void;
@@ -20,10 +20,21 @@ interface UserController {
 }
 
 const userController: UserController = {
-  updateUser: async (req: Request, res: Response): Promise<void> => {
-    const { userId } = req.params;
+  updateMe: async (req: Request, res: Response): Promise<void> => {
     try {
-      const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+      const token = req.cookies.jwt;
+      if (!token || !jwtSecretKey) {
+        res.status(401).json({ message: 'Authentication token is missing' });
+        return;
+      }
+
+      const decodedToken = jwt.verify(token, jwtSecretKey) as { userId: string };
+      const userId = decodedToken.userId;
+
+      const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true })
+        .populate('siteLanguage')
+        .populate('conversationLanguage')
+        .populate('tone');
       if (!updatedUser) {
         res.status(404).json({ message: 'User not found' });
         return;
@@ -31,21 +42,45 @@ const userController: UserController = {
       res.json(updatedUser);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: 'Invalid token' });
+      } else {
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
   },
-  deleteUser: async (req: Request, res: Response): Promise<void> => {
-    const { userId } = req.params;
+  deleteMe: async (req: Request, res: Response): Promise<void> => {
     try {
+      const token = req.cookies.jwt;
+      if (!token || !jwtSecretKey) {
+        res.status(401).json({ message: 'Authentication token is missing' });
+        return;
+      }
+
+      const decodedToken = jwt.verify(token, jwtSecretKey) as { userId: string };
+      const userId = decodedToken.userId;
+
       const deletedUser = await User.findByIdAndDelete(userId);
       if (!deletedUser) {
         res.status(404).json({ message: 'User not found' });
         return;
       }
+
+      // Clear the JWT cookie
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
+
       res.json({ message: 'User deleted successfully' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: 'Invalid token' });
+      } else {
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
   },
   login: async (req: Request, res: Response): Promise<void> => {
