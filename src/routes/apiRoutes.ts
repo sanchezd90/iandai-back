@@ -7,14 +7,12 @@ import chatController from '../controllers/chatController';
 import exerciseController from '../controllers/exerciseController';
 import openaiController from '../controllers/openaiController';
 import activityController from '../controllers/activityController';
-
-
+import toneController from '../controllers/toneController';
 
 // User Routes
-router.get('/users', userController.getAllUsers);
-router.get('/users/:userId', userController.getUserById);
-router.put('/users/:userId', userController.updateUser);
-router.delete('/users/:userId', userController.deleteUser);
+router.get('/users/me', userController.getMe);
+router.put('/users/me', userController.updateUser);
+router.delete('/users/me', userController.deleteUser);
 router.post('/users/signup', userController.createUser);
 router.post('/users/auth', userController.login);
 router.post('/users/logout', userController.logout);
@@ -50,6 +48,9 @@ router.delete('/activities/:id', activityController.deleteActivity);
 router.post('/openai', openaiController.createOpenAIChat);
 router.put('/openai/:chatId', openaiController.updateOpenAIChat);
 router.post('/openai/help', openaiController.getHelp);
+
+// Tone Routes
+router.get('/tones', toneController.getAll);
 
 // Root Route
 router.get('/', (req, res) => {

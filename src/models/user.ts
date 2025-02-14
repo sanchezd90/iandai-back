@@ -3,7 +3,7 @@ import { IUser } from '../types/models';
 
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
-  pass: { type: String, required: true },
+  password: { type: String, required: true },
   siteLanguage: { type: Schema.Types.ObjectId, ref: 'Language', required: true },
   conversationLanguage: { type: Schema.Types.ObjectId, ref: 'Language', required: true },
   tone: { type: Schema.Types.ObjectId, ref: 'Tone', required: true },

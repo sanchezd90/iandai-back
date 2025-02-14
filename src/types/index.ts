@@ -35,3 +35,8 @@ export interface JwtPayload {
   userId: string;
   email: string;
 } 
+export interface ITone extends Document {
+  _id: string;
+  en: string;
+  es: string;
+}

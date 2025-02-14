@@ -4,45 +4,22 @@ import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
 let jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-interface UserController {
-  getAllUsers: (req: Request, res: Response) => void;
-  getUserById: (req: Request, res: Response) => void;
+interface UserController {    
   updateUser: (req: Request, res: Response) => void;
   deleteUser: (req: Request, res: Response) => void;
   createUser: (req: Request, res: Response) => void;
   login: (req: Request, res: Response) => void;
   logout: (req: Request, res: Response) => void;
+  getMe: (req: Request, res: Response) => void;
 }
 
 const userController: UserController = {
-  getAllUsers: async (req: Request, res: Response): Promise<void> => {
-    try {
-      const users = await User.find();
-      res.json(users);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  },
-  getUserById: async (req: Request, res: Response): Promise<void> => {
-    const { userId } = req.params;
-    try {
-      const user = await User.findById(userId);
-      if (!user) {
-        res.status(404).json({ message: 'User not found' });
-        return;
-      }
-      res.json(user);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  },
   updateUser: async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.params;
     try {
@@ -87,7 +64,7 @@ const userController: UserController = {
         return;
       }
 
-      const isPasswordValid = await bcrypt.compare(password, existingUser.pass);
+      const isPasswordValid = await bcrypt.compare(password, existingUser.password);
       if (!isPasswordValid) {
         res.status(401).json({ message: 'Invalid credentials' });
         return;
@@ -131,7 +108,12 @@ const userController: UserController = {
 
       const newUser = await User.create({
         ...req.body,
-        password: hashedPassword
+        password: hashedPassword,
+        siteLanguage: '656cdbec8cba1818ac07f3fe',
+        conversationLanguage: '656cdbec8cba1818ac07f3fe',
+        tone: '67ae4c15fb72f35b72343f5c',
+        level: 'A1',
+        replies: '1'
       });
 
       const token = generateJwtToken(newUser);
@@ -158,6 +140,36 @@ const userController: UserController = {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
+    }
+  },
+  getMe: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const token = req.cookies.jwt;
+      if (!token || !jwtSecretKey) {
+        res.status(401).json({ message: 'Authentication token is missing' });
+        return;
+      }
+
+      const decodedToken = jwt.verify(token, jwtSecretKey) as { userId: string };
+      const userId = decodedToken.userId;
+      console.log(mongoose.modelNames()); // Check if 'Tone' is in the list
+      const user = await User.findById(userId)
+        .select('-password')        
+        .populate('siteLanguage')
+        .populate('conversationLanguage')
+        .populate('tone');
+      if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      if (error instanceof jwt.JsonWebTokenError) {
+        res.status(401).json({ message: 'Invalid token' });
+      } else {
+        res.status(500).json({ message: 'Internal Server Error' });
+      }
     }
   }
 };
