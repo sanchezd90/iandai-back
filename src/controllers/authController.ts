@@ -12,6 +12,11 @@ export const googleCallback = async (req: Request, res: Response) => {
   const email = googleProfile.emails[0].value;
 
   const existingUser = await User.findOne({ email }); 
+
+  if (existingUser && !existingUser.googleId) {
+    return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+  }
+
   let newUser = null;
   if (!existingUser) {
     newUser = await User.create({
