@@ -11,8 +11,7 @@ interface ChatController {
   getAllChats: (req: Request, res: Response) => Promise<void>;
   getChatById: (req: Request, res: Response) => Promise<void>;
   createChat: (req: Request, res: Response) => Promise<void>;
-  updateChat: (req: Request, res: Response) => Promise<void>;
-  deleteChat: (req: Request, res: Response) => Promise<void>;
+  updateChat: (req: Request, res: Response) => Promise<void>;  
   getAllChatsForUser: (req: Request, res: Response) => Promise<void>;
 }
 
@@ -66,21 +65,6 @@ const updateChat: ChatController['updateChat'] = async (req: Request, res: Respo
   }
 };
 
-const deleteChat: ChatController['deleteChat'] = async (req: Request, res: Response): Promise<void> => {
-  const { chatId } = req.params;
-  try {
-    const deletedChat = await Chat.findByIdAndDelete(chatId);
-    if (!deletedChat) {
-      res.status(404).json({ message: 'Chat not found' });
-      return;
-    }
-    res.json({ message: 'Chat deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
 const jwtSecretKey = process.env.JWT_SECRET_KEY as string;
 
 const verifyJwt = (token: string): Promise<JwtPayload> => {
@@ -120,8 +104,7 @@ const chatController: ChatController = {
   getAllChats,
   getChatById,
   createChat,
-  updateChat,
-  deleteChat,
+  updateChat,  
   getAllChatsForUser
 };
 

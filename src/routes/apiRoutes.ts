@@ -35,7 +35,6 @@ router.get('/chats/:chatId', chatController.getChatById);
 router.post('/chats', chatController.createChat);
 router.post('/chats/user', chatController.getAllChatsForUser);
 router.put('/chats/:chatId', chatController.updateChat);
-router.delete('/chats/:chatId', chatController.deleteChat);
 
 // Exercise Routes
 router.get('/exercises', exerciseController.getAllExercises);
@@ -74,14 +73,12 @@ router.get('/auth/logout', logout)
 router.get('/words', wordController.getAllWords);
 router.get('/words/:wordId', wordController.getWordById);
 router.post('/words', wordController.createWord);
-router.put('/words/:wordId', wordController.updateWord);
 router.delete('/words/:wordId', wordController.deleteWord);
 
 // Expression Routes
 router.get('/expressions', expressionController.getAllExpressions);
 router.get('/expressions/:expressionId', expressionController.getExpressionById);
 router.post('/expressions', expressionController.createExpression);
-router.put('/expressions/:expressionId', expressionController.updateExpression);
 router.delete('/expressions/:expressionId', expressionController.deleteExpression);
 
 // Root Route

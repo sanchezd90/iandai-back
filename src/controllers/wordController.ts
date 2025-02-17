@@ -5,8 +5,7 @@ import { IWord } from '../types/models';
 interface WordController {
   getAllWords: (req: Request, res: Response) => Promise<void>;
   getWordById: (req: Request<{ wordId: string }>, res: Response) => Promise<void>;
-  createWord: (req: Request<{}, {}, Partial<IWord>>, res: Response) => Promise<void>;
-  updateWord: (req: Request<{ wordId: string }, {}, Partial<IWord>>, res: Response) => Promise<void>;
+  createWord: (req: Request<{}, {}, Partial<IWord>>, res: Response) => Promise<void>;  
   deleteWord: (req: Request<{ wordId: string }>, res: Response) => Promise<void>;
 }
 
@@ -44,20 +43,6 @@ const createWord: WordController['createWord'] = async (req: Request<{}, {}, Par
   }
 };
 
-const updateWord: WordController['updateWord'] = async (req: Request<{ wordId: string }, {}, Partial<IWord>>, res: Response): Promise<void> => {
-  try {
-    const updatedWord = await Word.findByIdAndUpdate(req.params.wordId, req.body, { new: true });
-    if (!updatedWord) {
-      res.status(404).json({ message: 'Word not found' });
-      return;
-    }
-    res.json(updatedWord);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
 const deleteWord: WordController['deleteWord'] = async (req: Request<{ wordId: string }>, res: Response): Promise<void> => {
   try {
     const deletedWord = await Word.findByIdAndDelete(req.params.wordId);
@@ -75,8 +60,7 @@ const deleteWord: WordController['deleteWord'] = async (req: Request<{ wordId: s
 const wordController: WordController = {
   getAllWords,
   getWordById,
-  createWord,
-  updateWord,
+  createWord,  
   deleteWord,
 };
 
