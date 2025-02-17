@@ -26,37 +26,6 @@ export const ActivityController = {
       res.status(500).json({ message: error instanceof Error ? error.message : 'Unknown error' });
     }
   },
-
-  // Create a new activity
-  createActivity: async (req: Request<{}, {}, Partial<IActivity>>, res: Response): Promise<void> => {
-    const activity = new Activity(req.body);
-    try {
-      const newActivity = await activity.save();
-      res.status(201).json(newActivity);
-    } catch (error) {
-      res.status(400).json({ message: error instanceof Error ? error.message : 'Unknown error' });
-    }
-  },
-
-  // Update an existing activity
-  updateActivity: async (req: Request<{ id: string }, {}, Partial<IActivity>>, res: Response): Promise<void> => {
-    try {
-      const updatedActivity = await Activity.findByIdAndUpdate(req.params.id, req.body, { new: true });
-      res.json(updatedActivity);
-    } catch (error) {
-      res.status(400).json({ message: error instanceof Error ? error.message : 'Unknown error' });
-    }
-  },
-
-  // Delete an activity
-  deleteActivity: async (req: Request<{ id: string }>, res: Response): Promise<void> => {
-    try {
-      await Activity.findByIdAndDelete(req.params.id);
-      res.json({ message: 'Activity deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ message: error instanceof Error ? error.message : 'Unknown error' });
-    }
-  }
 }; 
 
 export default ActivityController;

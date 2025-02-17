@@ -25,9 +25,6 @@ router.post('/users/logout', userController.logout);
 // Language Routes
 router.get('/languages', languageController.getAllLanguages);
 router.get('/languages/:languageId', languageController.getLanguageById);
-router.post('/languages', languageController.createLanguage);
-router.put('/languages/:languageId', languageController.updateLanguage);
-router.delete('/languages/:languageId', languageController.deleteLanguage);
 
 // Chat Routes
 router.get('/chats', chatController.getAllChats);
@@ -39,16 +36,10 @@ router.put('/chats/:chatId', chatController.updateChat);
 // Exercise Routes
 router.get('/exercises', exerciseController.getAllExercises);
 router.get('/exercises/:exerciseId', exerciseController.getExerciseById);
-router.post('/exercises', exerciseController.createExercise);
-router.put('/exercises/:exerciseId', exerciseController.updateExercise);
-router.delete('/exercises/:exerciseId', exerciseController.deleteExercise);
 
 // Activity Routes
 router.get('/activities/', activityController.getAllActivities);
 router.get('/activities/:id', activityController.getActivityById);
-router.post('/activities/', activityController.createActivity);
-router.put('/activities/:id', activityController.updateActivity);
-router.delete('/activities/:id', activityController.deleteActivity);
 
 router.post('/openai', openaiController.createOpenAIChat);
 router.put('/openai/:chatId', openaiController.updateOpenAIChat);
@@ -60,9 +51,6 @@ router.get('/tones', toneController.getAll);
 // Subject Routes
 router.get('/subjects', subjectController.getAll);
 router.get('/subjects/:subjectId', subjectController.getSubjectById);
-router.post('/subjects', subjectController.createSubject);
-router.put('/subjects/:subjectId', subjectController.updateSubject);
-router.delete('/subjects/:subjectId', subjectController.deleteSubject);
 
 // Google Login Route
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
