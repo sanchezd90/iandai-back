@@ -18,6 +18,10 @@ const UserSchema = new Schema<IUser>({
     required: true,
     enum: ['1', '5', '10']
   },
+  settingsAlert: {
+    type: Boolean,
+    default: true
+  }
 }, { timestamps: true });
 
 const User = model<IUser>('User', UserSchema);
