@@ -27,7 +27,7 @@ export const googleCallback = async (req: Request, res: Response) => {
       tone: '67ae4c15fb72f35b72343f5c',
       level: 'A1',
       replies: '1',
-      settingsAlert:true
+      showHelp:true
     });
   }
 

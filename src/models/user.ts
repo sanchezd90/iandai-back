@@ -18,7 +18,7 @@ const UserSchema = new Schema<IUser>({
     required: true,
     enum: ['1', '5', '10']
   },
-  settingsAlert: {
+  showHelp: {
     type: Boolean,
     default: true
   }

@@ -59,7 +59,7 @@ export interface IUser extends Document {
   tone: Types.ObjectId | ITone;
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   replies: '1' | '5' | '10';
-  settingsAlert: boolean;
+  showHelp: boolean;
 }
 
 export interface IMessage {
